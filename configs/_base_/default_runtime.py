@@ -10,7 +10,8 @@ log_config = dict(
 # yapf:enable
 
 dist_params = dict(backend='nccl')
-log_level = 'INFO'
+#log_level = 'INFO'
+log_level = 'DEBUG'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]

@@ -10,7 +10,7 @@ from mmcv.utils import digit_version
 def is_tracing() -> bool:
     """Determine whether the model is called during the tracing of code with
     ``torch.jit.trace``."""
-    if digit_version(torch.__version__) >= digit_version('1.6.0'):
+    if 'parrots' != torch.__version__ and digit_version(torch.__version__) >= digit_version('1.6.0'):
         on_trace = torch.jit.is_tracing()
         # In PyTorch 1.6, torch.jit.is_tracing has a bug.
         # Refers to https://github.com/pytorch/pytorch/issues/42448

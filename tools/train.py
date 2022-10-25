@@ -19,6 +19,7 @@ from mmcls.models import build_classifier
 from mmcls.utils import (auto_select_device, collect_env, get_root_logger,
                          setup_multi_processes)
 
+from precision_analyze_master import *
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a model')
@@ -132,12 +133,16 @@ def main():
     # init distributed env first, since logger depends on the dist info.
     if args.launcher == 'none':
         distributed = False
+        torch.cuda.set_device(cfg.gpu_ids[0]) # zhaoguochun add
     else:
         distributed = True
         init_dist(args.launcher, **cfg.dist_params)
-        _, world_size = get_dist_info()
+        #_, world_size = get_dist_info()
+        rank, world_size = get_dist_info() # zhaoguochun add
+        torch.cuda.set_device(rank) # zhaoguochun add
         cfg.gpu_ids = range(world_size)
 
+    cfg.work_dir = cfg.work_dir + f"_{args.device}_" + f"ids_{cfg.gpu_ids}" + f"_launcher_{args.launcher}" # zhaoguochun
     # create work_dir
     mmcv.mkdir_or_exist(osp.abspath(cfg.work_dir))
     # dump config

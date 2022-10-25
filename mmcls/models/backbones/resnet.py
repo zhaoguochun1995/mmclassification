@@ -630,19 +630,23 @@ class ResNet(BaseBackbone):
                     constant_init(m.norm2, 0)
 
     def forward(self, x):
+        #x = x.cpu() # zhaoguochun
         if self.deep_stem:
             x = self.stem(x)
         else:
             x = self.conv1(x)
             x = self.norm1(x)
             x = self.relu(x)
+        #x = self.maxpool(x.cpu()).cuda() #zhaoguochun
         x = self.maxpool(x)
         outs = []
         for i, layer_name in enumerate(self.res_layers):
             res_layer = getattr(self, layer_name)
             x = res_layer(x)
+            #x = res_layer(x.cpu()).cuda() #zhaoguochun
             if i in self.out_indices:
                 outs.append(x)
+                #outs.append(x.cuda()) #zhaoguochun
         return tuple(outs)
 
     def train(self, mode=True):

@@ -53,6 +53,9 @@ class LoadImageFromFile(object):
         results['filename'] = filename
         results['ori_filename'] = results['img_info']['filename']
         results['img'] = img
+        if img is None:
+            print(f"img is none!! filename:{filename}")
+            import pdb;pdb.set_trace()
         results['img_shape'] = img.shape
         results['ori_shape'] = img.shape
         num_channels = 1 if len(img.shape) < 3 else img.shape[2]
